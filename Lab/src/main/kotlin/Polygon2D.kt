@@ -24,7 +24,7 @@ class Polygon2D {
     }
 
     fun addPoint(p: Point2D?) {
-        vertices = Arrays.copyOf(vertices, vertices.size + 1)
+        vertices = vertices.copyOf(vertices.size + 1)
         vertices[vertices.size - 1] = Point2D(p)
     }
 
@@ -37,23 +37,7 @@ class Polygon2D {
     }
 
     fun asPointsArrayNull(): Array<Point2D?> {
-        return Arrays.copyOf(vertices, vertices.size)
-    }
-
-    var lowest: Point2D? = null
-
-    fun lowestPoint(points: Array<Point2D>) {
-        var lowest = points[0]
-        for (i in 0 until points.size - 1) {
-            if (points[i].y <= lowest.y) {
-                if (points[i].y == lowest.y && points[i].x < lowest.x) {
-                    lowest = points[i]
-                } else if (points[i].y != lowest.y) {
-                    lowest = points[i]
-                }
-            }
-        }
-        lowest = lowest
+        return vertices.copyOf(vertices.size)
     }
 
     fun draw() {
@@ -63,13 +47,13 @@ class Polygon2D {
     }
 
     fun drawFilled() {
-        val X = DoubleArray(vertices.size)
-        val Y = DoubleArray(vertices.size)
+        val x = DoubleArray(vertices.size)
+        val y = DoubleArray(vertices.size)
         for (i in vertices.indices) {
-            X[i] = vertices[i]!!.x
-            Y[i] = vertices[i]!!.y
+            x[i] = vertices[i]!!.x
+            y[i] = vertices[i]!!.y
         }
-        StdDraw.filledPolygon(X, Y)
+        StdDraw.filledPolygon(x, y)
     }
 
     override fun toString(): String {

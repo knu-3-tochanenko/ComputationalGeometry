@@ -1,9 +1,13 @@
 import java.io.BufferedReader
 import java.io.FileReader
 import java.util.*
+import kotlin.system.exitProcess
 
-internal class MapFileReader(fileName: String) {
+class MapFileReader(
+        fileName: String
+) {
     private val lines = ArrayList<String>() // lines of input file
+
     fun parsePolygonData(): ArrayList<Polygon2D>? {
         if (lines.size < 7) return null // data error
         if (lines[3] != "POLYGON") return null
@@ -50,27 +54,11 @@ internal class MapFileReader(fileName: String) {
             return Point2D(x, y)
         }
 
-    protected fun printFileData() {
-        for (s in lines) {
-            println(s)
-        }
-    }
-
-    protected fun printPolygons() {
-        val polys = parsePolygonData() ?: return
-        println("Number of polygons: " + polys.size)
-        for (pg in polys) {
-            print("Polygon Points: ")
-            println(pg)
-        }
-    }
-
-    init { // constructor
-        // read polygon data from file
+    init {
         try {
             val inputFile = FileReader(fileName)
             val bufferReader = BufferedReader(inputFile)
-            var line: String = ""
+            var line: String
             while (true) {
                 line = bufferReader.readLine()
                 lines.add(line)
@@ -80,7 +68,7 @@ internal class MapFileReader(fileName: String) {
             bufferReader.close()
         } catch (e: Exception) {
             println("Error reading input map data file $fileName")
-            System.exit(1)
+            exitProcess(1)
         }
     }
 }

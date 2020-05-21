@@ -1,6 +1,5 @@
 import library.StdDraw
 import java.awt.Color
-import java.util.*
 
 fun main(args: Array<String>) {
 
@@ -14,13 +13,13 @@ fun main(args: Array<String>) {
     val map = ShapeMap(args[0])
 
     //array of point2d arrays of polygons
-    val convexHulls: Array<Array<Point2D>?> = arrayOfNulls(map.amountofPolys())
+    val convexHulls: Array<Array<Point2D>?> = arrayOfNulls(map.amountOfPolys())
 
     //find convex hull of every polygon on the map
     for (plygon in map.withIndex()) {
         val polygon = Polygon2D(GrahamScan.findConvexHull(plygon.value!!))
         val points = polygon.asPointsArray()
-        map.setPolygon(plygon.index, GrahamScan.PreProcess(plygon.value!!))
+        map.setPolygon(plygon.index, GrahamScan.preProcess(plygon.value!!))
         StdDraw.setPenColor(Color.RED)
         plygon.value?.draw() //draw polygons
         StdDraw.setPenColor(Color.LIGHT_GRAY)
@@ -37,11 +36,11 @@ fun main(args: Array<String>) {
     val endPoint = map.destinationPoint()
 
     //generate paths in visibility graph
-    var paths: List<Graph.Edge> = ArrayList()
+    val paths: List<Graph.Edge>
     paths = VisibilityGraph.generatePaths(convexHulls, startingPoint, endPoint)
 
     //convert list to array
-    var graph: Array<Graph.Edge?>? = arrayOfNulls(paths.size)
+    val graph: Array<Graph.Edge?>?
     graph = paths.toTypedArray()
 
     //run dijkstras on graph
@@ -50,7 +49,7 @@ fun main(args: Array<String>) {
     g.printPath(endPoint!!)
 
     //get the optimal route as a list
-    var route: List<Point2D> = ArrayList()
+    val route: List<Point2D>
     route = g.path
 
     //print graph paths if verbose mode
@@ -61,12 +60,8 @@ fun main(args: Array<String>) {
 
     //indicate start and end points
     StdDraw.setPenColor(Color.BLACK)
-    if (startingPoint != null) {
-        StdDraw.filledCircle(startingPoint.x, startingPoint.y, 0.004)
-    }
-    if (endPoint != null) {
-        StdDraw.filledCircle(endPoint.x, endPoint.y, 0.004)
-    }
+    StdDraw.filledCircle(startingPoint.x, startingPoint.y, 0.004)
+    StdDraw.filledCircle(endPoint.x, endPoint.y, 0.004)
     var totalDist = 0.0
 
     //draw shortest path

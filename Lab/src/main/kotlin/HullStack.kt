@@ -22,9 +22,6 @@ class HullStack<T> {
         return size
     }
 
-    val isEmpty: Boolean
-        get() = size == 0
-
     override fun toString(): String {
         var s = ""
         var tmp = head
@@ -39,7 +36,7 @@ class HullStack<T> {
         return head?.item // stack is empty
     }
 
-    fun sneaky_peek(): T? { //look at item 2 places in
+    fun sneakyPeek(): T? { //look at item 2 places in
         return if (head!!.next == null) null else head!!.next?.item // stack is empty
     }
 

@@ -4,13 +4,6 @@ class Graph(edges: Array<Edge?>?) {
 
     private val graph: MutableMap<Point2D, Vertex>
     var path: MutableList<Point2D> = ArrayList() //returns all possible paths
-    var routes: MutableList<Point2D> = ArrayList() //returns shortest route
-        get() { //route getter
-            for (v in graph.values) {
-                routes.add(v.point)
-            }
-            return routes
-        }
 
     fun dijkstra(startName: Point2D) { //dijkstra algorithm
         val source = graph[startName] //set source
@@ -50,11 +43,10 @@ class Graph(edges: Array<Edge?>?) {
         println()
     }
 
-    class Edge //edge constructor
-    (//edge class
-            val v1 //points at either end of the edge
-            : Point2D, val v2: Point2D, //distance between them
-            val dist: Double) {
+    class Edge(
+            val v1: Point2D, val v2: Point2D,
+            val dist: Double
+    ) {
 
         override fun toString(): String {
             return "($v1,$v2)\n"
@@ -70,37 +62,40 @@ class Graph(edges: Array<Edge?>?) {
 
     }
 
-    class Vertex //constructor
-    (//getter
-            //implements comparable interface
-            val point //vertex
-            : Point2D) : Comparable<Vertex> {
+    class Vertex(
+            private val point: Point2D
+    ) : Comparable<Vertex> {
         val neighbours: MutableMap<Vertex?, Double> = HashMap()
 
         //getter
         var dist = Double.MAX_VALUE //set initial dist to infinity
         var previous: Vertex? = null
-        fun printPath(path: MutableList<Point2D>) //prints path and adds to list
-        {
-            if (this === previous) {
-                print(point)
-                path.add(point) //path is list in graph
-            } else if (previous == null) {
-                print(point.toString() + "(unreached)")
-            } else {
-                path.add(point) //recursive call
-                previous!!.printPath(path)
-                print(" -> " + point)
+
+        //prints path and adds to list
+        fun printPath(path: MutableList<Point2D>) {
+            when {
+                this === previous -> {
+                    print(point)
+                    path.add(point) //path is list in graph
+                }
+                previous == null -> {
+                    print("$point(unreached)")
+                }
+                else -> {
+                    path.add(point) //recursive call
+                    previous!!.printPath(path)
+                    print(" -> $point")
+                }
             }
         }
 
         override fun compareTo(other: Vertex): Int //compare distances
         {
-            return if (dist == other.dist) point.compareTo(other.point) else java.lang.Double.compare(dist, other.dist)
+            return if (dist == other.dist) point.compareTo(other.point) else dist.compareTo(other.dist)
         }
 
         override fun toString(): String {
-            return "(" + point + ", " + dist + ")"
+            return "($point, $dist)"
         }
 
     }

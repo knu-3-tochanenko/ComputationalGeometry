@@ -15,17 +15,13 @@ class Point2D : Comparable<Point2D> {
         y = p.y
     }
 
-    override fun compareTo(p2: Point2D): Int { //compare two points
+    override fun compareTo(other: Point2D): Int { //compare two points
         val p1 = this
-        return if (p1.x + p1.y > p2.x + p2.y) -1 else if (p1.x + p1.y < p2.x + p2.y) 1 else 0
+        return if (p1.x + p1.y > other.x + other.y) -1 else if (p1.x + p1.y < other.x + other.y) 1 else 0
     }
 
     override fun toString(): String {
         return "($x,$y)\n"
-    }
-
-    fun draw() {
-        StdDraw.point(x, y)
     }
 
     companion object {

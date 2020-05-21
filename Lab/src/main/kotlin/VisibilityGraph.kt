@@ -1,8 +1,10 @@
 import java.util.*
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 object VisibilityGraph {
     //method to determine if two vectors intersect each other
-    fun lineOfSight(v1: Vector, v2: Vector): Boolean {
+    private fun lineOfSight(v1: Vector, v2: Vector): Boolean {
         //v1.getP1() is one of the points making the v1 vector
         //v1.getP0() is the other
         val denominator = (v1.p1.x - v1.p0.x) * (v2.p1.y - v2.p0.y) - (v1.p1.y - v1.p0.y) * (v2.p1.x - v2.p0.x)
@@ -21,15 +23,15 @@ object VisibilityGraph {
     }
 
     //method to get the edge points of a convex hull
-    fun getEdges(convexHulls: Array<Array<Point2D>?>): List<Vector> {
+    private fun getEdges(convexHulls: Array<Array<Point2D>?>): List<Vector> {
         val edges: MutableList<Vector> = ArrayList()
         for (i in convexHulls.indices) {
             var k = 1
-            for (j in 0 until convexHulls[i]!!.size) {
+            for (j in convexHulls[i]!!.indices) {
                 if (k == convexHulls[i]!!.size) {
                     k = 0
                 }
-                edges.add(Vector(convexHulls[i]!!.get(j), convexHulls[i]!!.get(k)))
+                edges.add(Vector(convexHulls[i]!![j], convexHulls[i]!![k]))
                 k++
             }
         }
@@ -40,27 +42,7 @@ object VisibilityGraph {
     //method to calculate the distance between two points
     fun dist(p1: Point2D?, p2: Point2D): Double {
         //euclidian formula
-        return Math.sqrt(Math.pow(p2.x - p1!!.x, 2.0) + Math.pow(p2.y - p1.y, 2.0))
-    }
-
-    //method that gets the index of an array at a certain value (works as vertices are unique i.e map/dictionary)
-    fun indexOfArray(array: Array<Point2D>, key: Point2D): Int {
-        var returnvalue = -1
-        for (i in array.indices) {
-            //check key and array value
-            if (key === array[i]) {
-                returnvalue = i
-                break
-            }
-        }
-        return returnvalue
-    }
-
-    //method to append two arrays
-    fun <T> concat(first: Array<T>, second: Array<T>): Array<T> {
-        val result = Arrays.copyOf(first, first.size + second.size)
-        System.arraycopy(second, 0, result, first.size, second.size)
-        return result
+        return sqrt(x = (p2.x - p1!!.x).pow(2.0) + (p2.y - p1.y).pow(2.0))
     }
 
     //method that generates the paths on the visibility graph
@@ -69,16 +51,16 @@ object VisibilityGraph {
         val lines: MutableList<Vector> = ArrayList() //temp. Vector list
         val paths: MutableList<Graph.Edge> = ArrayList() //list of paths in graph
         var s = 0 //counters
-        var intersections = 0
+        var intersections: Int
         for (i in convexHulls.indices) { //for each polygon
-            for (j in 0 until convexHulls[i]!!.size) { //..for each point in each polygon
+            for (j in convexHulls[i]!!.indices) { //..for each point in each polygon
                 for (k in convexHulls.indices) { //..connected to each polygon
-                    for (l in 0 until convexHulls[k]!!.size) { //..to each point in each polygon
+                    for (l in convexHulls[k]!!.indices) { //..to each point in each polygon
                         if (s == 0) {
                             intersections = 0 //reset intersections to 0
                             lines.add(Vector(startingPoint!!, convexHulls[k]!![l])) //add vector from starting point to every other point
                             for (e in edges.indices) { //for every edge on every convex hull
-                                if (lineOfSight(lines[lines.size - 1], edges[e]) == true) //if the line intersects any edge
+                                if (lineOfSight(lines[lines.size - 1], edges[e])) //if the line intersects any edge
                                     intersections++ //increment intersections (could optimise here)
                             }
                             if (intersections < 1) { //if no intersections
@@ -88,12 +70,16 @@ object VisibilityGraph {
                         }
                         if (i != k && s != 0) { //other points (not starting point)
                             intersections = 0
-                            lines.add(Vector(convexHulls[i]!!.get(j), convexHulls[k]!!.get(l)))
+                            lines.add(Vector(convexHulls[i]!![j], convexHulls[k]!![l]))
                             for (e in edges.indices) {
-                                if (lineOfSight(lines[lines.size - 1], edges[e]) == true) intersections++
+                                if (lineOfSight(lines[lines.size - 1], edges[e])) intersections++
                             }
                             if (intersections < 1) {
-                                paths.add(Graph.Edge(lines[lines.size - 1].p0, lines[lines.size - 1].p1, dist(lines[lines.size - 1].p0, lines[lines.size - 1].p1)))
+                                paths.add(Graph.Edge(
+                                        lines[lines.size - 1].p0,
+                                        lines[lines.size - 1].p1,
+                                        dist(lines[lines.size - 1].p0, lines[lines.size - 1].p1)
+                                ))
                             }
                         }
                     }
@@ -102,11 +88,11 @@ object VisibilityGraph {
             }
         } //end point checks
         for (i in convexHulls.indices) {
-            for (j in 0 until convexHulls[i]!!.size) {
+            for (element in convexHulls[i]!!) {
                 intersections = 0
-                lines.add(Vector(endPoint!!, convexHulls[i]!![j]))
+                lines.add(Vector(endPoint!!, element))
                 for (e in edges.indices) {
-                    if (lineOfSight(lines[lines.size - 1], edges[e]) == true) intersections++
+                    if (lineOfSight(lines[lines.size - 1], edges[e])) intersections++
                 }
                 if (intersections < 1) {
                     paths.add(Graph.Edge(lines[lines.size - 1].p0, lines[lines.size - 1].p1, dist(lines[lines.size - 1].p0, lines[lines.size - 1].p1)))
@@ -117,9 +103,5 @@ object VisibilityGraph {
             paths.add(Graph.Edge(edges[i].p0, edges[i].p1, dist(edges[i].p0, edges[i].p1)))
         }
         return paths //return list of paths in graph
-    }
-
-    @JvmStatic
-    fun main(args: Array<String>) {
     }
 }

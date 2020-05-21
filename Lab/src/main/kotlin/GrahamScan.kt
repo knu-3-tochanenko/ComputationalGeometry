@@ -5,7 +5,7 @@ import java.awt.Color
 import java.util.*
 
 object GrahamScan {
-    fun mergeSort(a: Array<Vector?>) {
+    private fun mergeSort(a: Array<Vector?>) {
         val tmp = arrayOfNulls<Vector?>(a.size)
         mergeSort(a, tmp, 0, a.size - 1)
     }
@@ -19,14 +19,14 @@ object GrahamScan {
         }
     }
 
-    private fun merge(a: Array<Vector?>, tmp: Array<Vector?>, left: Int, right: Int, rightEnd: Int) {
-        var left = left
-        var right = right
-        var rightEnd = rightEnd
+    private fun merge(a: Array<Vector?>, tmp: Array<Vector?>, left_: Int, right_: Int, rightEnd_: Int) {
+        var left = left_
+        var right = right_
+        var rightEnd = rightEnd_
         val leftEnd = right - 1
         var k = left
         val num = rightEnd - left + 1
-        while (left <= leftEnd && right <= rightEnd) if (a[left]!!.compareTo(a[right]!!) <= 0) tmp[k++] = a[left++] else tmp[k++] = a[right++]
+        while (left <= leftEnd && right <= rightEnd) if (a[left]!! <= a[right]!!) tmp[k++] = a[left++] else tmp[k++] = a[right++]
         while (left <= leftEnd) // Copy rest of first half
             tmp[k++] = a[left++]
         while (right <= rightEnd) // Copy rest of right half
@@ -42,10 +42,10 @@ object GrahamScan {
     }
 
     //method to check if a point is within a quad
-    fun pointIn(compPoint: Point2D, points: Array<Array<Point2D?>>): Boolean {
+    private fun pointIn(compPoint: Point2D, points: Array<Array<Point2D?>>): Boolean {
         var b = false
         for (i in points.indices) {
-            for (j in 0 until points[i].size) {
+            for (j in points[i].indices) {
                 var k = j + 1
                 if (k == points[i].size) {
                     k = 0
@@ -61,9 +61,9 @@ object GrahamScan {
     }
 
     //method to preprocess data
-    fun PreProcess(polygon: Polygon2D): Polygon2D {
-        var polygon = polygon
-        var points = arrayOfNulls<Point2D>(1)
+    fun preProcess(polygon_: Polygon2D): Polygon2D {
+        var polygon = polygon_
+        val points: Array<Point2D?>
         points = polygon.asPointsArrayNull()
         //declare points
         val maxX = points[0]!!.x
@@ -117,15 +117,15 @@ object GrahamScan {
             p.add(minYp)
         }
         //convert to polygon and return
-        var newPoints: Array<Point2D?>? = arrayOfNulls(p.size)
+        val newPoints: Array<Point2D?>?
         newPoints = p.toTypedArray()
         polygon = Polygon2D(newPoints)
         return polygon
     }
 
-    fun findConvexHull(polygon: Polygon2D): Polygon2D {
-        var polygon = polygon
-        var points = arrayOfNulls<Point2D>(1)
+    fun findConvexHull(polygon_: Polygon2D): Polygon2D {
+        var polygon = polygon_
+        val points: Array<Point2D?>
         points = polygon.asPointsArrayNull()
         val lowest = lowestPoint(points) //get lowest hull point
         val vecs = arrayOfNulls<Vector>(points.size)
@@ -139,7 +139,7 @@ object GrahamScan {
         hull.push(vecs[0]!!.p1) //add two initial points to hull
         hull.push(vecs[1]!!.p1)
         for (i in 2 until points.size) {
-            while (turningDirection(hull.sneaky_peek()!!, hull.peek()!!, vecs[i]!!.p1) == -1.0) { //check if right/left turn
+            while (turningDirection(hull.sneakyPeek()!!, hull.peek()!!, vecs[i]!!.p1) == -1.0) { //check if right/left turn
                 hull.pop() //pop from stack
             }
             hull.push(vecs[i]!!.p1) //push onto stack
@@ -168,7 +168,7 @@ object GrahamScan {
     }
 
     //method to get lowest hull point
-    fun lowestPoint(points: Array<Point2D?>): Point2D? {
+    private fun lowestPoint(points: Array<Point2D?>): Point2D? {
         var lowest = points[0]
         for (i in 0 until points.size - 1) {
             if (points[i]!!.y <= lowest!!.y) {
@@ -184,8 +184,8 @@ object GrahamScan {
     }
 
     //helper method for lowestPoints()
-    fun swapLowest(points: Array<Point2D?>, lowest: Point2D?) {
-        var temp: Point2D? = Point2D(0.0, 0.0)
+    private fun swapLowest(points: Array<Point2D?>, lowest: Point2D?) {
+        var temp: Point2D?
         for (i in 0 until points.size - 1) {
             if (points[i] == lowest) {
                 temp = points[0]

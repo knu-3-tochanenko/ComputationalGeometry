@@ -1,28 +1,30 @@
 import java.util.*
 
-class Vector //constructor
-(//2D vector
-        val p0: Point2D, //getters
-        val p1: Point2D) : Comparable<Vector> {
+class Vector(
+        val p0: Point2D,
+        val p1: Point2D
+) : Comparable<Vector> {
 
     //method to calculate area for removing collinear points
-    fun calcArea(B: Vector): Double {
-        val A = this
-        return A.p0.x * (A.p1.y - B.p1.y) + A.p1.x * (B.p1.y - A.p0.y) + B.p1.x * (A.p0.y - A.p1.y)
+    fun calcArea(b: Vector): Double {
+        val a = this
+        return a.p0.x * (a.p1.y - b.p1.y) + a.p1.x * (b.p1.y - a.p0.y) + b.p1.x * (a.p0.y - a.p1.y)
     }
 
-    //compareto method
-    override fun compareTo(B: Vector): Int {
-        val A = this
-        if (A === B) return 0
-        val a1 = A.p1.x - A.p0.x
-        val a2 = B.p1.x - A.p0.x
-        val b1 = A.p1.y - B.p0.y
-        val b2 = B.p1.y - B.p0.y
+    override fun compareTo(b: Vector): Int {
+        val a = this
+        if (a === b) return 0
+        val a1 = a.p1.x - a.p0.x
+        val a2 = b.p1.x - a.p0.x
+        val b1 = a.p1.y - b.p0.y
+        val b2 = b.p1.y - b.p0.y
         val cross = a1 * b2 - b1 * a2 //cross product
-        if (cross == 0.0) return 0 //collinear
-        else if (cross > 0) return 1 else if (cross < 0) return -1
-        return 0
+        return when {
+            cross == 0.0 -> 0 //collinear
+            cross > 0 -> 1
+            cross < 0 -> -1
+            else -> 0
+        }
     }
 
     override fun toString(): String {
@@ -45,7 +47,7 @@ class Vector //constructor
                 }
             }
             //convert to Point2D array
-            var hull = arrayOfNulls<Point2D>(hullPoints.size)
+            val hull: Array<Point2D?>
             hull = hullPoints.toTypedArray()
             return hull
         }
