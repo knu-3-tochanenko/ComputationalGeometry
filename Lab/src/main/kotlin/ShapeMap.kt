@@ -25,7 +25,7 @@ class ShapeMap : Iterable<Polygon2D?> {
         // defensive copy
         polygons = ArrayList()
         for (i in pgs.indices) {
-            polygons.add(Polygon2D(pgs[i]))
+            polygons.add(Polygon2D(pgs[i]!!))
         }
         srcPoint = Point2D(src)
         destPoint = Point2D(dest)
