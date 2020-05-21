@@ -204,21 +204,4 @@ public class GrahamScan {
         }
 
     }
-
-    public static void main(String args[]) {
-        ShapeMap test0 = new ShapeMap("TEST-MAP-1.TXT");
-        StdDraw.setCanvasSize(1200, 1200);
-        // ShapeMap test0 = new ShapeMap("DEMO-MAP-3.TXT");
-        for (Polygon2D poly : test0) {
-            StdDraw.setPenColor(Color.RED);
-            poly.draw();
-            poly = PreProcess(poly);
-            StdDraw.pause(500);
-            Polygon2D polygon = new Polygon2D(findConvexHull(poly));
-            StdDraw.pause(500);
-            StdDraw.setPenColor(Color.BLACK);
-            polygon.draw();
-        }
-    }
-
 }
