@@ -77,6 +77,7 @@ if __name__ == "__main__":
         [9.0, 1.0],
         [10.0, 2.0]
     ]
+    
     points.sort()
 
     plot.plot([p[0] for p in points], [p[1] for p in points], 'o')
