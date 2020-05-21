@@ -1,3 +1,5 @@
+import library.StdDraw;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,13 +139,13 @@ public class GrahamScan {
         mergeSort(vecs);
 
         HullStack<Point2D> hull = new HullStack<Point2D>(); //create hull stack
-        hull.push(vecs[0].getPoint()); //add two initial points to hull
-        hull.push(vecs[1].getPoint());
+        hull.push(vecs[0].getP1()); //add two initial points to hull
+        hull.push(vecs[1].getP1());
         for (int i = 2; i < points.length; i++) {
-            while (Point2D.turningDirection(hull.sneaky_peek(), hull.peek(), vecs[i].getPoint()) == -1) {//check if right/left turn
+            while (Point2D.turningDirection(hull.sneaky_peek(), hull.peek(), vecs[i].getP1()) == -1) {//check if right/left turn
                 hull.pop(); //pop from stack
             }
-            hull.push(vecs[i].getPoint()); //push onto stack
+            hull.push(vecs[i].getP1()); //push onto stack
         }
         int size = hull.size();
         Point2D[] hullPoints = new Point2D[size];

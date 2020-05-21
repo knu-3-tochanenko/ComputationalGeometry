@@ -1,3 +1,5 @@
+import library.StdDraw;
+
 import java.awt.Color;
 import java.util.Arrays;
 
