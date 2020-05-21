@@ -46,12 +46,12 @@ fun main(args: Array<String>) {
 
     //run dijkstras on graph
     val g = Graph(graph)
-    g.dijkstra(startingPoint)
-    g.printPath(endPoint)
+    g.dijkstra(startingPoint!!)
+    g.printPath(endPoint!!)
 
     //get the optimal route as a list
     var route: List<Point2D> = ArrayList()
-    route = g.getPath()
+    route = g.path
 
     //print graph paths if verbose mode
     StdDraw.setPenColor(Color.BLACK)
