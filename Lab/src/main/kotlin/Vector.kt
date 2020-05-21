@@ -35,13 +35,13 @@ class Vector //constructor
     companion object {
         //method to remove collinear points
         @JvmStatic
-        fun removeColinear(v: Array<Vector>): Array<Point2D?> {
+        fun removeColinear(v: Array<Vector?>): Array<Point2D?> {
             val hullPoints: MutableList<Point2D> = ArrayList() //create hull points
             for (i in v.indices) {
-                val area = v[i].calcArea(v[(i + 1) % v.size]) //calculate area under 3 points
+                val area = v[i]!!.calcArea(v[(i + 1) % v.size]!!) //calculate area under 3 points
                 if (area < 0.0001) { //if less than threshold
                 } else {
-                    hullPoints.add(v[i].p1) //add to hull points
+                    hullPoints.add(v[i]!!.p1) //add to hull points
                 }
             }
             //convert to Point2D array

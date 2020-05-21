@@ -36,6 +36,10 @@ class Polygon2D {
         return Arrays.copyOf(vertices, vertices.size)
     }
 
+    fun asPointsArrayNull(): Array<Point2D?> {
+        return Arrays.copyOf(vertices, vertices.size)
+    }
+
     var lowest: Point2D? = null
 
     fun lowestPoint(points: Array<Point2D>) {
