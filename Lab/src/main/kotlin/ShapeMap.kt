@@ -33,10 +33,10 @@ class ShapeMap : Iterable<Polygon2D?> {
 
     // constructor - from input file data
     internal constructor(fileName: String?) {
-        val mapReader = MapFileReader(fileName)
+        val mapReader = MapFileReader(fileName!!)
         srcPoint = mapReader.sourcePoint
         destPoint = mapReader.destinationPoint
-        polygons = mapReader.parsePolygonData()
+        polygons = mapReader.parsePolygonData()!!
     }
 
     fun addPolygon(pg: Polygon2D) {
