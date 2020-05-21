@@ -3,33 +3,38 @@ import java.util.*
 class Graph(edges: Array<Edge?>?) {
 
     private val graph: MutableMap<Point2D, Vertex>
-    var path: MutableList<Point2D> = ArrayList() //returns all possible paths
+    var path: MutableList<Point2D> = ArrayList()
 
-    fun dijkstra(startName: Point2D) { //dijkstra algorithm
-        val source = graph[startName] //set source
-        val q: NavigableSet<Vertex?> = TreeSet() //create treeset
-        for (v in graph.values) { //init variables
+    fun dijkstra(startName: Point2D) {
+        val source = graph[startName]
+        val q: NavigableSet<Vertex?> = TreeSet()
+
+        for (v in graph.values) {
             v.previous = if (v === source) source else null
             if (v == source)
                 v.dist = 0.0
             else
                 v.dist = Double.MAX_VALUE
-            q.add(v) //add to q
+            q.add(v)
         }
+
         dijkstra(q)
     }
 
     private fun dijkstra(q: NavigableSet<Vertex?>) {
         var u: Vertex?
         var v: Vertex
-        while (!q.isEmpty()) { //for every vertex
-            u = q.pollFirst() // vertex with smallest dist
-            if (u!!.dist == Double.MAX_VALUE) break
+
+        while (!q.isEmpty()) {
+            u = q.pollFirst()
+            if (u!!.dist == Double.MAX_VALUE)
+                break
+
             for ((key, value) in u.neighbours) {
                 v = key!!
                 val alternateDist = u.dist + value
-                if (alternateDist < v.dist) { //id dist is shorter
-                    q.remove(v) //remove and add
+                if (alternateDist < v.dist) {
+                    q.remove(v)
                     v.dist = alternateDist
                     v.previous = u
                     q.add(v)
@@ -38,7 +43,7 @@ class Graph(edges: Array<Edge?>?) {
         }
     }
 
-    fun printPath(endName: Point2D) { //graph functions that call vertex methods
+    fun printPath(endName: Point2D) {
         graph[endName]!!.printPath(path)
         println()
     }
@@ -52,11 +57,11 @@ class Graph(edges: Array<Edge?>?) {
             return "($v1,$v2)\n"
         }
 
-        fun getp0(): Point2D { //getters for points
+        fun getP0(): Point2D {
             return v1
         }
 
-        fun getp1(): Point2D {
+        fun getP1(): Point2D {
             return v2
         }
 
@@ -65,33 +70,33 @@ class Graph(edges: Array<Edge?>?) {
     class Vertex(
             private val point: Point2D
     ) : Comparable<Vertex> {
-        val neighbours: MutableMap<Vertex?, Double> = HashMap()
 
-        //getter
-        var dist = Double.MAX_VALUE //set initial dist to infinity
+        val neighbours: MutableMap<Vertex?, Double> = HashMap()
+        var dist = Double.MAX_VALUE
         var previous: Vertex? = null
 
-        //prints path and adds to list
+
         fun printPath(path: MutableList<Point2D>) {
             when {
                 this === previous -> {
                     print(point)
-                    path.add(point) //path is list in graph
+                    path.add(point)
                 }
                 previous == null -> {
                     print("$point(unreached)")
                 }
                 else -> {
-                    path.add(point) //recursive call
+                    path.add(point)
                     previous!!.printPath(path)
                     print(" -> $point")
                 }
             }
         }
 
-        override fun compareTo(other: Vertex): Int //compare distances
-        {
-            return if (dist == other.dist) point.compareTo(other.point) else dist.compareTo(other.dist)
+        override fun compareTo(other: Vertex): Int {
+            return if (dist == other.dist)
+                point.compareTo(other.point)
+            else dist.compareTo(other.dist)
         }
 
         override fun toString(): String {
@@ -100,10 +105,10 @@ class Graph(edges: Array<Edge?>?) {
 
     }
 
-    init { //edges array
+    init {
         graph = HashMap(edges!!.size)
         for (e in edges) {
-            if (!graph.containsKey(e!!.v1)) graph[e.v1] = Vertex(e.v1) //checks if vertex already exists
+            if (!graph.containsKey(e!!.v1)) graph[e.v1] = Vertex(e.v1)
             if (!graph.containsKey(e.v2)) graph[e.v2] = Vertex(e.v2)
         }
         for (e in edges) {

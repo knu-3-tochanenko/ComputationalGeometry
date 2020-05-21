@@ -1,8 +1,8 @@
 class HullStack<T> {
-    private var head //head of stack
-            : Node<T>? = null
+    private var head: Node<T>? = null
     private var size = 0
-    fun push(item: T) { //push item onto stack
+
+    fun push(item: T) {
         val newNode = Node<T>()
         newNode.item = item
         newNode.next = head
@@ -10,8 +10,9 @@ class HullStack<T> {
         size++
     }
 
-    fun pop(): T? { //pop item off of stack
-        if (head == null) return null //stack is empty
+    fun pop(): T? {
+        if (head == null)
+            return null
         val item: T? = head!!.item
         head = head!!.next
         size--
@@ -32,12 +33,14 @@ class HullStack<T> {
         return s
     }
 
-    fun peek(): T? { //look at top item in stack
-        return head?.item // stack is empty
+    fun peek(): T? {
+        return head?.item
     }
 
-    fun sneakyPeek(): T? { //look at item 2 places in
-        return if (head!!.next == null) null else head!!.next?.item // stack is empty
+    fun sneakyPeek(): T? {
+        return if (head!!.next == null)
+            null
+        else head!!.next?.item
     }
 
     private class Node<T> {

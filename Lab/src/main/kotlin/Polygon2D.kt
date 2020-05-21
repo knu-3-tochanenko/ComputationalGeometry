@@ -1,23 +1,24 @@
 import library.StdDraw
-import java.awt.Color
 import java.util.*
 
 class Polygon2D {
     private var vertices: Array<Point2D?>
 
-    constructor() {  // default constructor
+    constructor() {
         vertices = arrayOfNulls(0)
     }
 
-    constructor(points: Array<Point2D?>) {  // constructor
+    constructor(points: Array<Point2D?>) {
         vertices = arrayOfNulls(points.size)
+
         for (i in points.indices) {
             vertices[i] = Point2D(points[i])
         }
     }
 
-    constructor(poly: Polygon2D) {  // copy constructor
+    constructor(poly: Polygon2D) {
         vertices = arrayOfNulls(poly.vertices.size)
+
         for (i in poly.vertices.indices) {
             vertices[i] = Point2D(poly.vertices[i])
         }
@@ -42,7 +43,20 @@ class Polygon2D {
 
     fun draw() {
         for (i in vertices.indices) {
-            if (i < vertices.size - 1) StdDraw.line(vertices[i]!!.x, vertices[i]!!.y, vertices[i + 1]!!.x, vertices[i + 1]!!.y) else StdDraw.line(vertices[i]!!.x, vertices[i]!!.y, vertices[0]!!.x, vertices[0]!!.y)
+            if (i < vertices.size - 1)
+                StdDraw.line(
+                        vertices[i]!!.x,
+                        vertices[i]!!.y,
+                        vertices[i + 1]!!.x,
+                        vertices[i + 1]!!.y
+                )
+            else
+                StdDraw.line(
+                        vertices[i]!!.x,
+                        vertices[i]!!.y,
+                        vertices[0]!!.x,
+                        vertices[0]!!.y
+                )
         }
     }
 
@@ -58,24 +72,8 @@ class Polygon2D {
 
     override fun toString(): String {
         var polyAsString = ""
-        for (i in vertices.indices) polyAsString += vertices[i].toString() + " "
+        for (i in vertices.indices)
+            polyAsString += vertices[i].toString() + " "
         return polyAsString
-    }
-
-    companion object {
-        // TEST CLIENT //
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val shape = arrayOfNulls<Point2D>(4)
-            shape[0] = Point2D(0.2, 0.2)
-            shape[1] = Point2D(0.2, 0.8)
-            shape[2] = Point2D(0.8, 0.8)
-            shape[3] = Point2D(0.8, 0.2)
-            val pg = Polygon2D(shape)
-            StdDraw.setCanvasSize(800, 800)
-            StdDraw.setPenRadius(0.005)
-            StdDraw.setPenColor(Color.RED)
-            pg.draw()
-        }
     }
 }

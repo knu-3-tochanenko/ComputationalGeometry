@@ -1,5 +1,5 @@
 import Point2D.Companion.turningDirection
-import Vector.Companion.removeColinear
+import Vector.Companion.removeCollinear
 import library.StdDraw
 import java.awt.Color
 import java.util.*
@@ -10,7 +10,12 @@ object GrahamScan {
         mergeSort(a, tmp, 0, a.size - 1)
     }
 
-    private fun mergeSort(a: Array<Vector?>, tmp: Array<Vector?>, left: Int, right: Int) {
+    private fun mergeSort(
+            a: Array<Vector?>,
+            tmp: Array<Vector?>,
+            left: Int,
+            right: Int
+    ) {
         if (left < right) {
             val center = (left + right) / 2
             mergeSort(a, tmp, left, center)
@@ -19,20 +24,29 @@ object GrahamScan {
         }
     }
 
-    private fun merge(a: Array<Vector?>, tmp: Array<Vector?>, left_: Int, right_: Int, rightEnd_: Int) {
+    private fun merge(
+            a: Array<Vector?>,
+            tmp: Array<Vector?>,
+            left_: Int,
+            right_: Int,
+            rightEnd_: Int
+    ) {
         var left = left_
         var right = right_
         var rightEnd = rightEnd_
         val leftEnd = right - 1
         var k = left
         val num = rightEnd - left + 1
-        while (left <= leftEnd && right <= rightEnd) if (a[left]!! <= a[right]!!) tmp[k++] = a[left++] else tmp[k++] = a[right++]
-        while (left <= leftEnd) // Copy rest of first half
+
+        while (left <= leftEnd && right <= rightEnd)
+            if (a[left]!! <= a[right]!!) tmp[k++] = a[left++]
+            else tmp[k++] = a[right++]
+
+        while (left <= leftEnd) // copy from first half
             tmp[k++] = a[left++]
-        while (right <= rightEnd) // Copy rest of right half
+        while (right <= rightEnd) // copy from second half
             tmp[k++] = a[right++]
 
-        // Copy tmp back
         var i = 0
         while (i < num) {
             a[rightEnd] = tmp[rightEnd]
@@ -41,8 +55,11 @@ object GrahamScan {
         }
     }
 
-    //method to check if a point is within a quad
-    private fun pointIn(compPoint: Point2D, points: Array<Array<Point2D?>>): Boolean {
+    // If point in a quad
+    private fun pointIn(
+            compPoint: Point2D,
+            points: Array<Array<Point2D?>>
+    ): Boolean {
         var b = false
         for (i in points.indices) {
             for (j in points[i].indices) {
@@ -50,8 +67,11 @@ object GrahamScan {
                 if (k == points[i].size) {
                     k = 0
                 }
-                if (points[i][j]!!.y < compPoint.y && points[i][k]!!.y >= compPoint.y || points[i][k]!!.y < compPoint.y && points[i][j]!!.y >= compPoint.y) {
-                    if (points[i][j]!!.x + (compPoint.y - points[i][j]!!.y) / (points[i][k]!!.y - points[i][j]!!.y) * (points[i][k]!!.x - points[i][j]!!.x) < compPoint.x) {
+                if (points[i][j]!!.y < compPoint.y && points[i][k]!!.y >= compPoint.y
+                        || points[i][k]!!.y < compPoint.y && points[i][j]!!.y >= compPoint.y) {
+                    if (points[i][j]!!.x + (compPoint.y - points[i][j]!!.y)
+                            / (points[i][k]!!.y - points[i][j]!!.y)
+                            * (points[i][k]!!.x - points[i][j]!!.x) < compPoint.x) {
                         b = !b
                     }
                 }
@@ -60,12 +80,12 @@ object GrahamScan {
         return b
     }
 
-    //method to preprocess data
+
     fun preProcess(polygon_: Polygon2D): Polygon2D {
         var polygon = polygon_
         val points: Array<Point2D?>
         points = polygon.asPointsArrayNull()
-        //declare points
+
         val maxX = points[0]!!.x
         val maxY = points[0]!!.y
         val minX = points[0]!!.x
@@ -75,7 +95,7 @@ object GrahamScan {
         var minXp = points[0]
         var minYp = points[0]
 
-        //check if there is a higher/lower point
+        // Check if there is a higher point
         for (i in 1 until points.size) {
             if (points[i]!!.x > maxX) {
                 maxXp = points[i]
@@ -90,14 +110,15 @@ object GrahamScan {
                 minYp = points[i]
             }
         }
-        //create quad with points
+
+        // New quad with given points
         val quad = Array(2) { arrayOfNulls<Point2D>(2) }
         quad[1][1] = maxXp
         quad[0][1] = maxYp
         quad[1][0] = minXp
         quad[0][0] = minYp
 
-        //check if any points are within quad
+        // If points in a quad
         val p: MutableList<Point2D?> = ArrayList()
         for (i in points.indices) {
             if (!pointIn(points[i]!!, quad)) {
@@ -116,7 +137,7 @@ object GrahamScan {
         if (!p.contains(minXp)) {
             p.add(minYp)
         }
-        //convert to polygon and return
+
         val newPoints: Array<Point2D?>?
         newPoints = p.toTypedArray()
         polygon = Polygon2D(newPoints)
@@ -126,48 +147,59 @@ object GrahamScan {
     fun findConvexHull(polygon_: Polygon2D): Polygon2D {
         var polygon = polygon_
         val points: Array<Point2D?>
+
         points = polygon.asPointsArrayNull()
-        val lowest = lowestPoint(points) //get lowest hull point
-        val vecs = arrayOfNulls<Vector>(points.size)
+
+        val lowest = lowestPoint(points)
+        val vectors = arrayOfNulls<Vector>(points.size)
+
         for (i in points.indices) {
-            vecs[i] = Vector(lowest!!, points[i]!!)
+            vectors[i] = Vector(lowest!!, points[i]!!)
         }
 
-        //sort by polar angle
-        mergeSort(vecs)
-        val hull = HullStack<Point2D>() //create hull stack
-        hull.push(vecs[0]!!.p1) //add two initial points to hull
-        hull.push(vecs[1]!!.p1)
+        // Sort by polar angle
+        mergeSort(vectors)
+
+        val hull = HullStack<Point2D>()
+        hull.push(vectors[0]!!.p1)
+        hull.push(vectors[1]!!.p1)
+
         for (i in 2 until points.size) {
-            while (turningDirection(hull.sneakyPeek()!!, hull.peek()!!, vecs[i]!!.p1) == -1.0) { //check if right/left turn
-                hull.pop() //pop from stack
+            while (turningDirection(
+                            hull.sneakyPeek()!!,
+                            hull.peek()!!,
+                            vectors[i]!!.p1
+                    ) == -1.0) {
+                hull.pop()
             }
-            hull.push(vecs[i]!!.p1) //push onto stack
+            hull.push(vectors[i]!!.p1)
         }
+
         val size = hull.size()
         val hullPoints = arrayOfNulls<Point2D>(size)
         for (i in 0 until size) {
             hullPoints[i] = hull.pop()
         }
+
         val testArray = arrayOfNulls<Vector>(hullPoints.size)
         for (i in hullPoints.indices) {
             testArray[i] = Vector(hullPoints[i]!!, hullPoints[(i + 1) % hullPoints.size]!!)
-            //StdDraw.line(testArray[i].getP0().getX(), testArray[i].getP0().getY(), testArray[i].getP1().getX(), testArray[i].getP1().getY());
         }
-        StdDraw.setPenColor(Color.RED)
-        val test = removeColinear(testArray) //remove collinear points
+
+        StdDraw.setPenColor(Color.GREEN)
+
+        val test = removeCollinear(testArray)
         val h = arrayOfNulls<Point2D>(test.size)
         for (i in test.indices) {
             h[i] = test[i]
             StdDraw.setPenColor(Color.BLACK)
             StdDraw.filledCircle(h[i]!!.x, h[i]!!.y, 0.004)
         }
-        //polygon = new Polygon2D(hullPoints);
+
         polygon = Polygon2D(test)
         return polygon
     }
 
-    //method to get lowest hull point
     private fun lowestPoint(points: Array<Point2D?>): Point2D? {
         var lowest = points[0]
         for (i in 0 until points.size - 1) {
@@ -183,7 +215,6 @@ object GrahamScan {
         return lowest
     }
 
-    //helper method for lowestPoints()
     private fun swapLowest(points: Array<Point2D?>, lowest: Point2D?) {
         var temp: Point2D?
         for (i in 0 until points.size - 1) {

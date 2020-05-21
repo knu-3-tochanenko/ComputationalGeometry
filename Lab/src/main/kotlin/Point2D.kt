@@ -1,23 +1,26 @@
-import library.StdDraw
-
 class Point2D : Comparable<Point2D> {
     var x: Double
     var y: Double
 
-    constructor(x: Double, y: Double) { // constructor
+    constructor(x: Double, y: Double) {
         this.x = x
         this.y = y
     }
 
-    constructor(p: Point2D?) { // copy constructor
-        if (p == null) println("Point2D(): null point!")
+    constructor(p: Point2D?) {
+        if (p == null)
+            println("Point2D(): null point!")
         x = p!!.x
         y = p.y
     }
 
-    override fun compareTo(other: Point2D): Int { //compare two points
+    override fun compareTo(other: Point2D): Int {
         val p1 = this
-        return if (p1.x + p1.y > other.x + other.y) -1 else if (p1.x + p1.y < other.x + other.y) 1 else 0
+        return when {
+            p1.x + p1.y > other.x + other.y -> -1
+            p1.x + p1.y < other.x + other.y -> 1
+            else -> 0
+        }
     }
 
     override fun toString(): String {
@@ -25,7 +28,6 @@ class Point2D : Comparable<Point2D> {
     }
 
     companion object {
-        //calculate turning direction, similar to polar angle
         @JvmStatic
         fun turningDirection(p0: Point2D, p1: Point2D, p2: Point2D): Double {
             val a1 = p1.x - p0.x

@@ -1,6 +1,6 @@
 import java.util.*
 
-class ShapeMap// constructor - from input file data
+class ShapeMap
 internal constructor(fileName: String?) : Iterable<Polygon2D?> {
     private var srcPoint: Point2D? = null
     private var destPoint: Point2D? = null
