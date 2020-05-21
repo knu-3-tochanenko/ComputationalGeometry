@@ -72,29 +72,29 @@ class PathVisualize {
         }
 
         private fun drawLines(verbose: Boolean) {
-            if (verbose) {
-                StdDraw.setPenColor(Color.GRAY)
-                for (i in paths.indices) {
-                    StdDraw.line(
-                            paths[i].getP0().x,
-                            paths[i].getP0().y,
-                            paths[i].getP1().x,
-                            paths[i].getP1().y
-                    )
-                }
-            }
+//            if (verbose) {
+//                StdDraw.setPenColor(Color.GRAY)
+//                for (i in paths.indices) {
+//                    StdDraw.line(
+//                            paths[i].getP0().x,
+//                            paths[i].getP0().y,
+//                            paths[i].getP1().x,
+//                            paths[i].getP1().y
+//                    )
+//                }
+//            }
 
             StdDraw.setPenColor(Color.BLACK)
             StdDraw.filledCircle(startingPoint!!.x, startingPoint!!.y, 0.004)
             StdDraw.filledCircle(endPoint!!.x, endPoint!!.y, 0.004)
             totalDist = 0.0
 
-            StdDraw.setPenColor(Color.BLUE)
-            StdDraw.setPenRadius(0.010)
-            for (i in 1 until route.size) {
-                StdDraw.line(route[i - 1].x, route[i - 1].y, route[i].x, route[i].y)
-                totalDist += VisibilityGraph.dist(route[i - 1], route[i])
-            }
+//            StdDraw.setPenColor(Color.BLUE)
+//            StdDraw.setPenRadius(0.010)
+//            for (i in 1 until route.size) {
+//                StdDraw.line(route[i - 1].x, route[i - 1].y, route[i].x, route[i].y)
+//                totalDist += VisibilityGraph.dist(route[i - 1], route[i])
+//            }
         }
     }
 }
